@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carona FATEC – Demo de backup</title>
+<style>
+:root{--bg:#eef2f8;--ink:#14213d;--card:#fff;--navy:#173b72;--acc:#f2a900;--mut:#5b6b85;--ok:#1d8a4e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1626;--ink:#e8eefb;--card:#1a2742;--mut:#9fb0cc}}
+:root[data-theme="dark"]{--bg:#0e1626;--ink:#e8eefb;--card:#1a2742;--mut:#9fb0cc}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font:15px system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px}
+h1{font-size:18px;margin:0}
+#ph{position:relative;width:340px;max-width:100%;height:520px;background:var(--card);border-radius:22px;border:6px solid var(--navy);overflow:hidden}
+.scr{position:absolute;inset:0;padding:16px;display:none;flex-direction:column;gap:10px}
+.scr.on{display:flex}
+.top{background:var(--navy);color:#fff;margin:-16px -16px 4px;padding:12px 16px;font-weight:700}
+h2{margin:4px 0;font-size:20px}
+.f{border:1px solid var(--mut);border-radius:8px;padding:10px;color:var(--mut);min-height:18px}
+.f.v{color:var(--ink);border-color:var(--navy)}
+.b{background:var(--navy);color:#fff;border-radius:10px;padding:11px;text-align:center;font-weight:600}
+.c{border:1px solid var(--mut);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.c .b{padding:7px;font-size:13px}
+.s{background:var(--acc);color:#14213d;border-radius:8px;padding:8px;font-weight:700;text-align:center}
+.s.ok{background:var(--ok);color:#fff}
+small{color:var(--mut)}
+#cur{position:absolute;left:30px;top:480px;width:18px;height:18px;border-radius:50%;background:var(--acc);border:2px solid #fff;transition:left .9s,top .9s;z-index:9;pointer-events:none;box-shadow:0 1px 6px #0006}
+#cur.k{animation:k .4s}
+@keyframes k{50%{transform:scale(.5)}}
+#cap{width:340px;max-width:100%;min-height:72px;background:var(--card);border-left:4px solid var(--acc);border-radius:8px;padding:10px 12px;font-size:14px}
+.ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+button{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:15px;cursor:pointer}
+</style></head><body>
+<h1>Carona FATEC · demo de backup</h1>
+<div id="ph">
+ <div id="cur"></div>
+ <div class="scr on" id="s1"><div class="top">🚗 Carona FATEC · Araçatuba</div>
+  <h2>Para onde vamos?</h2>
+  <div class="f" id="fb">Seu bairro de origem</div>
+  <div class="f" id="fd">Destino</div>
+  <div class="f" id="fdt">Data da viagem</div>
+  <div class="f" id="fh">Horário aproximado</div>
+  <div class="b" id="bb">Buscar caronas →</div>
+  <small>🔒 Protótipo acadêmico: dados fictícios e simulados.</small></div>
+ <div class="scr" id="s2"><div class="top">Caronas disponíveis</div>
+  <small>3 opções (dados fictícios)</small>
+  <div class="c"><b>Carona 1 · saída Hilda · 07:00</b><span>Vagas disponíveis · contribuição sugerida</span><div class="b" id="bp">Pedir vaga</div></div>
+  <div class="c"><b>Carona 2 · saída Hilda · 07:15</b><span>Vagas disponíveis · contribuição sugerida</span><div class="b">Pedir vaga</div></div>
+  <div class="c"><b>Carona 3 · saída Paraíso · 07:30</b><span>Vagas disponíveis · contribuição sugerida</span><div class="b">Pedir vaga</div></div></div>
+ <div class="scr" id="s3"><div class="top">Solicitação registrada</div>
+  <h2>Pedido de carona enviado!</h2>
+  <div class="s" id="st">Aguardando confirmação do motorista</div>
+  <small>PROTOCOLO (exemplo)</small><b>FC-2026-0001</b>
+  <div class="b" id="bn">Nova busca</div>
+  <div class="b" id="ba">Simular aceite ✓</div>
+  <small>Demonstração sem comunicação real com motoristas.</small></div>
+</div>
+<div id="cap">Clique em “Iniciar demo”.</div>
+<div class="ctl"><button id="go">▶ Iniciar demo</button><label><input type="checkbox" id="snd" checked> narração com voz</label></div>
+<script>
+const $=id=>document.getElementById(id);
+const show=n=>document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==='s'+n));
+const setv=(id,t)=>{const e=$(id);e.textContent=t;e.classList.add('v')};
+const reset=()=>{[['fb','Seu bairro de origem'],['fd','Destino'],['fdt','Data da viagem'],['fh','Horário aproximado']].forEach(([i,t])=>{$(i).textContent=t;$(i).classList.remove('v')});$('st').textContent='Aguardando confirmação do motorista';$('st').classList.remove('ok');show(1)};
+const steps=[
+ [null,()=>{},"Olá! Esta é a demonstração do Carona FATEC, a plataforma de carona compartilhada para a comunidade da FATEC Araçatuba. Ela funciona direto no navegador do celular, sem instalar nada. Na primeira tela, o aluno diz para onde quer ir."],
+ ['fb',()=>setv('fb','Hilda'),"Primeiro, escolhemos o bairro de origem. Vou selecionar Hilda."],
+ ['fd',()=>setv('fd','FATEC Araçatuba'),"O destino é a FATEC Araçatuba."],
+ ['fdt',()=>setv('fdt','Próxima segunda-feira'),"Depois, informamos a data da viagem."],
+ ['fh',()=>setv('fh','07:00 – 08:00'),"E o horário aproximado: entre sete e oito da manhã, a tempo da primeira aula."],
+ ['bb',()=>show(2),"Agora é só clicar em Buscar caronas."],
+ [null,()=>{},"O sistema mostra as caronas disponíveis no trajeto, cada uma com bairro de saída, horário, vagas e uma contribuição sugerida para dividir os custos. Lembrando que os dados do protótipo são fictícios."],
+ ['bp',()=>show(3),"Escolho a primeira opção e clico em Pedir vaga."],
+ [null,()=>{},"Pronto! A solicitação foi registrada, com número de protocolo, e fica aguardando a confirmação do motorista. Nesta demonstração, nada é enviado de verdade."],
+ ['ba',()=>{$('st').textContent='Carona confirmada (simulado)';$('st').classList.add('ok')},"Para mostrar o fluxo completo, clico em Simular aceite, e o status muda para carona confirmada."],
+ ['bn',()=>show(1),"Por fim, Nova busca volta à tela inicial. Em poucos cliques, o aluno encontra e pede uma carona, economizando dinheiro e tirando carros da rua. Obrigado!"]
+];
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function say(t){return new Promise(r=>{$('cap').textContent=t;const est=t.length*65+600;
+ if($('snd').checked&&window.speechSynthesis){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';u.onend=()=>r();u.onerror=()=>setTimeout(r,est);setTimeout(r,est+4000);speechSynthesis.speak(u);return}catch(e){}}
+ setTimeout(r,est)})}
+let run=0;
+async function play(){const id=++run;reset();const c=$('cur'),p=$('ph').getBoundingClientRect();$('go').textContent='↻ Reiniciar';
+ for(const [t,a,n] of steps){if(id!==run)return;
+  if(t){const r=$(t).getBoundingClientRect();c.style.left=(r.left-p.left+r.width/2-9)+'px';c.style.top=(r.top-p.top+r.height/2-9)+'px';await wait(1000);c.classList.add('k');await wait(300);c.classList.remove('k');a()}
+  else{c.style.left='30px';c.style.top='480px'}
+  await say(n);await wait(500)}
+ $('go').textContent='↻ Reiniciar'}
+$('go').onclick=()=>{try{speechSynthesis.cancel()}catch(e){}play()};
+</script></body></html>
